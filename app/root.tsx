@@ -9,7 +9,6 @@ import type { Route } from "./+types/root";
 
 import appStylesHref from "./app.css?url";
 import { createEmptyContact } from "./data";
-import { log } from "console";
 
 export default function App() {
   return <Outlet />;
@@ -77,6 +76,5 @@ export function HydrateFallback() {
 
 export async function action() {
   const contact = await createEmptyContact();
-  log("contact", contact);
   return redirect(`/contacts/${contact.id}/edit`);
 }
