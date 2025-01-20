@@ -1,18 +1,32 @@
 import {
   Form,
+  Link,
+  Outlet,
   Scripts,
   ScrollRestoration,
-  isRouteErrorResponse,
+  isRouteErrorResponse
 } from "react-router";
 import type { Route } from "./+types/root";
 
 import appStylesHref from "./app.css?url";
+import { getContacts } from "./data";
 
-export default function App() {
+export async function clientLoader() {
+  // This function is run on the client after the initial render
+  // It can be used to hydrate the app, add event listeners, etc.
+  const contacts = await getContacts();
+  console.log(contacts);
+  return { contacts };
+}
+
+export default function App({ loaderData }: Route.ComponentProps) {
+  const { contacts } = loaderData;
   return (
     <>
       <div id="sidebar">
-        <h1>React Router Contacts</h1>
+        <h1>
+          <Link to="about">React Router Contacts</Link>
+        </h1>
         <div>
           <Form id="search-form" role="search">
             <input
@@ -29,15 +43,32 @@ export default function App() {
           </Form>
         </div>
         <nav>
-          <ul>
-            <li>
-              <a href={`/contacts/1`}>Your Name</a>
-            </li>
-            <li>
-              <a href={`/contacts/2`}>Your Friend</a>
-            </li>
-          </ul>
+          {contacts.length ? (
+            <ul>
+              {contacts.map(contact => (
+                <li key={contact.id}>
+                  <Link to={`contacts/${contact.id}`}>
+                    {contact.first || contact.last ? (
+                      <>
+                        {contact.first} {contact.last}
+                      </>
+                    ) : (
+                      <i>No Name</i>
+                    )}
+                    {contact.favorite ? <span>★</span> : null}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>
+              <i>No contacts</i>
+            </p>
+          )}
         </nav>
+      </div>
+      <div id="detail">
+        <Outlet />
       </div>
     </>
   );
@@ -91,5 +122,14 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
         </pre>
       )}
     </main>
+  );
+}
+
+export function HydrateFallback() {
+  return (
+    <div id="loading-splash">
+      <div id="loading-splash-spinner" />
+      <p>Loading, please wait...</p>
+    </div>
   );
 }
