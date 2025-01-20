@@ -1,8 +1,15 @@
-import { Outlet, Scripts, ScrollRestoration, isRouteErrorResponse } from "react-router";
+import {
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  isRouteErrorResponse,
+  redirect
+} from "react-router";
 import type { Route } from "./+types/root";
 
 import appStylesHref from "./app.css?url";
 import { createEmptyContact } from "./data";
+import { log } from "console";
 
 export default function App() {
   return <Outlet />;
@@ -69,6 +76,7 @@ export function HydrateFallback() {
 }
 
 export async function action() {
-  const contact = createEmptyContact();
-  return { contact };
+  const contact = await createEmptyContact();
+  log("contact", contact);
+  return redirect(`/contacts/${contact.id}/edit`);
 }
