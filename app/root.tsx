@@ -8,7 +8,7 @@ import {
 import type { Route } from "./+types/root";
 
 import appStylesHref from "./app.css?url";
-import type Contact from "./models/contact";
+import type Contact from "./types/contact";
 
 export default function App() {
   return <Outlet />;

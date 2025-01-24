@@ -1,4 +1,4 @@
-import type Contact from "app/models/contact";
+import type Contact from "app/types/contact";
 import { Form, useFetcher } from "react-router";
 import type { Route } from "./+types/contact";
 

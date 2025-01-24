@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Form, Link, NavLink, Outlet, useNavigation, useSubmit } from "react-router";
 import type { Route } from "./+types/sidebar";
-import type Contact from "app/models/contact";
+import type Contact from "app/types/contact";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);

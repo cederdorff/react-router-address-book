@@ -1,6 +1,6 @@
 import { Form, redirect, useNavigate } from "react-router";
 import type { Route } from "./+types/edit-contact";
-import type Contact from "app/models/contact";
+import type Contact from "app/types/contact";
 
 export async function loader({ params }: Route.LoaderArgs) {
   const response = await fetch(`${process.env.API}/contacts/${params.contactId}`);
