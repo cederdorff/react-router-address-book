@@ -62,15 +62,11 @@ const fakeContacts = {
 
 ////////////////////////////////////////////////////////////////////////////////
 // Handful of helper functions to be called from route loaders and actions
-export async function getContacts(query?: string | null) {
-  await new Promise(resolve => setTimeout(resolve, 500));
-  let contacts = await fakeContacts.getAll();
-  if (query) {
-    contacts = matchSorter(contacts, query, {
-      keys: ["first", "last"]
-    });
-  }
-  return contacts.sort(sortBy("first", "createdAt"));
+export async function getContacts() {
+  const response = await fetch("http://localhost:3000/contacts");
+  const contacts = await response.json();
+  console.log(contacts);
+  return contacts;
 }
 
 export async function createEmptyContact() {

@@ -1,12 +1,13 @@
-import { Form, Link, NavLink, Outlet, useNavigation, useSubmit } from "react-router";
-import { getContacts } from "../data";
-import type { Route } from "./+types/sidebar";
 import { useEffect, useState } from "react";
+import { Form, Link, NavLink, Outlet, useNavigation, useSubmit } from "react-router";
+import type { Route } from "./+types/sidebar";
+import type Contact from "app/models/contact";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
   const q = url.searchParams.get("q");
-  const contacts = await getContacts(q);
+  const response = await fetch(`${process.env.API}/contacts/search?q=${q || ""}`);
+  const contacts: Contact[] = await response.json();
   return { contacts, q };
 }
 
@@ -62,12 +63,12 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
           {contacts.length ? (
             <ul>
               {contacts.map(contact => (
-                <li key={contact.id}>
+                <li key={contact._id}>
                   <NavLink
                     className={({ isActive, isPending }) =>
                       isActive ? "active" : isPending ? "pending" : ""
                     }
-                    to={`contacts/${contact.id}`}>
+                    to={`contacts/${contact._id}`}>
                     {contact.first || contact.last ? (
                       <>
                         {contact.first} {contact.last}
