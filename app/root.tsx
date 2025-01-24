@@ -8,7 +8,7 @@ import {
 import type { Route } from "./+types/root";
 
 import appStylesHref from "./app.css?url";
-import { createEmptyContact } from "./data";
+import type Contact from "./models/contact";
 
 export default function App() {
   return <Outlet />;
@@ -75,6 +75,19 @@ export function HydrateFallback() {
 }
 
 export async function action() {
-  const contact = await createEmptyContact();
-  return redirect(`/contacts/${contact.id}/edit`);
+  const response = await fetch(`${process.env.API}/contacts`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      first: "",
+      last: "",
+      twitter: "",
+      avatar: "",
+      notes: ""
+    })
+  });
+  const contact: Contact = await response.json();
+  return redirect(`/contacts/${contact._id}/edit`);
 }

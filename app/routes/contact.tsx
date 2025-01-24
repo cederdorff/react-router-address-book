@@ -1,19 +1,13 @@
-import { Form, useFetcher } from "react-router";
-
-import { getContact, updateContact, type ContactRecord } from "../data";
-import type { Route } from "./+types/contact";
 import type Contact from "app/models/contact";
+import { Form, useFetcher } from "react-router";
+import type { Route } from "./+types/contact";
 
 export async function loader({ params }: Route.LoaderArgs) {
   const response = await fetch(`${process.env.API}/contacts/${params.contactId}`);
-  console.log(`${process.env.API}/contacts/${params.contactId}`);
-
   const contact: Contact = await response.json();
-  console.log(contact);
   if (!contact) {
     throw new Response("Not Found", { status: 404 });
   }
-  console.log(contact);
   return { contact };
 }
 
@@ -72,7 +66,7 @@ export default function Contact({ loaderData }: Route.ComponentProps) {
   );
 }
 
-function Favorite({ contact }: { contact: Pick<ContactRecord, "favorite"> }) {
+function Favorite({ contact }: { contact: Pick<Contact, "favorite"> }) {
   const fetcher = useFetcher();
   const favorite = fetcher.formData
     ? fetcher.formData.get("favorite") === "true"
@@ -91,8 +85,7 @@ function Favorite({ contact }: { contact: Pick<ContactRecord, "favorite"> }) {
 }
 
 export async function action({ params, request }: Route.ActionArgs) {
-  const formData = await request.formData();
-  return updateContact(params.contactId, {
-    favorite: formData.get("favorite") === "true"
+  return await fetch(`${process.env.API}/contacts/${params.contactId}/favorite`, {
+    method: "PATCH"
   });
 }

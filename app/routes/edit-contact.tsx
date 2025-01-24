@@ -1,14 +1,10 @@
 import { Form, redirect, useNavigate } from "react-router";
-import { getContact, updateContact } from "../data";
 import type { Route } from "./+types/edit-contact";
 import type Contact from "app/models/contact";
 
 export async function loader({ params }: Route.LoaderArgs) {
   const response = await fetch(`${process.env.API}/contacts/${params.contactId}`);
-  console.log(`${process.env.API}/contacts/${params.contactId}`);
-
   const contact: Contact = await response.json();
-  console.log(contact);
 
   if (!contact) {
     throw new Response("Not Found", { status: 404 });
@@ -77,7 +73,13 @@ export async function action({ params, request }: Route.ActionArgs) {
   const updates = Object.fromEntries(formData.entries());
 
   // Update the contact
-  await updateContact(params.contactId, updates);
+  await fetch(`${process.env.API}/contacts/${params.contactId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(updates)
+  });
   // Redirect to the contact page
   return redirect(`/contacts/${params.contactId}`);
 }
