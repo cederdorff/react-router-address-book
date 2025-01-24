@@ -1,6 +1,6 @@
-import type Contact from "app/types/contact";
 import { Form, useFetcher } from "react-router";
 import type { Route } from "./+types/contact";
+import type { Contact } from "app/types/contact";
 
 export async function loader({ params }: Route.LoaderArgs) {
   const response = await fetch(`${process.env.API}/contacts/${params.contactId}`);

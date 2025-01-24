@@ -1,4 +1,4 @@
-export default interface Contact {
+export type Contact = {
   _id: string;
   first?: string;
   last?: string;
@@ -6,4 +6,4 @@ export default interface Contact {
   twitter?: string;
   notes?: string;
   favorite?: boolean;
-}
+};
